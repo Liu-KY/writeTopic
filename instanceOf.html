@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const _instanceOf = (obj, classObj) => {
+            if(obj === null || typeof obj !== 'object') return false
+            let objproto = obj.__proto__
+            let classObjPro = classObj.prototype
+            while (true) {
+                if (objproto == null) return false
+                if (objproto == classObjPro) return true
+                objproto = objproto.__proto__
+            }
+        }
+
+        console.log('test', _instanceOf(null, Array)) // false
+        console.log('test', _instanceOf([], Array)) // true
+        console.log('test', _instanceOf('', Array)) // false
+        console.log('test', _instanceOf({}, Object)) // true
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        Function.prototype.mycall = function (context, ...arg) {
+            const fn = Symbol('临时属性');
+            context[fn] = this;
+            context[fn](...arg);
+            delete context[fn];
+        }
+
+        Function.prototype.myapply = function (context, arg) {
+            const fn = Symbol('临时属性');
+            context[fn] = this;
+            context[fn](...arg);
+            delete context[fn];
+        }
+
+        Function.prototype.mybind = function (context, ...arg) {
+            const fn = Symbol('临时属性');
+            context[fn] = this;
+            let fToBind = (...arg1) => {
+                context[fn](...arg,...arg1);
+                delete context[fn];
+            }
+            fToBind.prototype = Object.create(context[fn].prototype)
+            return fToBind
+
+        }
+
+
+        function a(a, b, c) {
+            console.log(this.name);
+            console.log(a, b, c)
+        }
+        const b = {
+            name: "segmentFault"
+        }
+        a.mycall(b, 1, 2, 3)
+        a.myapply(b, [1, 2, 3])
+        a.mybind(b,1,2,3)()
+
+
+
+
+
+
+
+
+
+
+
+
+        // Function.prototype.myCall = function (obj) {
+        //     console.log(this)
+        //     if (typeof this !== 'function') {
+        //         console.error('type error!');
+        //     }
+        //     obj = obj || window;
+        //     let args = [...arguments].slice(1);
+        //     obj.fn = this;
+        //     let result = obj.fn(...args)
+        //     delete obj.fn;
+        //     return result;
+        // }
+        // let dog = {
+        //     name: '狗',
+        //     eat(food1, food2) {
+        //         console.log(this.name + '爱吃' + food1 + food2);
+        //     }
+        // }
+        // let cat = {
+        //     name: '猫',
+        // }
+
+        // dog.eat.myCall(cat, '鱼', '肉');   // 猫爱吃鱼肉
+    </script>
+</body>
+
+</html>
